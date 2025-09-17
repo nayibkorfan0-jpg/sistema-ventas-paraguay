@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Empresarial - Sistema de Gestión Integral</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --dark-bg: #1a1a2e;
+            --sidebar-bg: #16213e;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        /* LOGIN SCREEN */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(0.5deg); }
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 480px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo i {
+            font-size: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .btn-login {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        /* MAIN APPLICATION */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-logo i {
+            background: var(--success-gradient);
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section-title {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 1.5rem 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: #4facfe;
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link .badge {
+            margin-left: auto;
+            background: var(--secondary-gradient);
+            border: none;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .nav-link .badge.admin {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            box-shadow: 0 2px 4px rgba(238, 90, 36, 0.3);
+            font-weight: 600;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .topbar-left {
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-right: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(238, 90, 36, 0.2);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(238, 90, 36, 0.3);
+            background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%);
+        }
+
+        .btn-logout i {
+            font-size: 0.85rem;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* DASHBOARD CARDS */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .metric-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .metric-change {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .metric-change.positive {
+            background: #d4f4dd;
+            color: #0f7b0f;
+        }
+
+        .metric-change.negative {
+            background: #fdd8d8;
+            color: #c53030;
+        }
+
+        /* DATA TABLES */
+        .data-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .data-card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .data-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-responsive {
+            border-radius: 0;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table th {
+            background: #f8fafc;
+            border: none;
+            font-weight: 600;
+            color: var(--text-primary);
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            border: none;
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: var(--primary-gradient);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+        }
+
+        /* BADGES */
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-draft { background: #e2e8f0; color: #64748b; }
+        .status-pending { background: #fef3c7; color: #d97706; }
+        .status-confirmed { background: #d1fae5; color: #059669; }
+        .status-shipped { background: #dbeafe; color: #2563eb; }
+        .status-delivered { background: #f3e8ff; color: #7c3aed; }
+        .status-paid { background: #d4f4dd; color: #0f7b0f; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* LOADING STATES */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* UTILITIES */
+        .d-none { display: none !important; }
+        .text-center { text-align: center; }
+        .mb-0 { margin-bottom: 0 !important; }
+        .mb-2 { margin-bottom: 0.5rem !important; }
+        .mb-3 { margin-bottom: 1rem !important; }
+        .mb-4 { margin-bottom: 1.5rem !important; }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="login-section" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fas fa-chart-line"></i>
+                <h1 class="login-title">ERP Empresarial</h1>
+                <p class="login-subtitle">Sistema Integral de Gestión de Ventas</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" id="username" value="admin" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" value="admin123" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Iniciar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app-section" class="app-container d-none">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ERP Empresarial</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="#" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Análisis</span>
+                        <span class="badge">Pro</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">CRM & Ventas</div>
+                    <a href="#" class="nav-link" data-section="customers">
+                        <i class="fas fa-users"></i>
+                        <span>Clientes</span>
+                        <span class="badge" id="customers-count">-</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="quotes">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotizaciones</span>
+                        <span class="badge" id="quotes-count">-</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Órdenes</span>
+                        <span class="badge" id="orders-count">-</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="invoices">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Facturas</span>
+                        <span class="badge" id="invoices-count">-</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inventario</div>
+                    <a href="#" class="nav-link" data-section="products">
+                        <i class="fas fa-box"></i>
+                        <span>Productos</span>
+                        <span class="badge" id="products-count">-</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="inventory">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Inventario</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reportes</div>
+                    <a href="#" class="nav-link" data-section="reports">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reportes</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="financial">
+                        <i class="fas fa-calculator"></i>
+                        <span>Financiero</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administración</div>
+                    <a href="#" class="nav-link" data-section="users">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Gestión de Usuarios</span>
+                        <span class="badge admin">Admin</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="user-permissions">
+                        <i class="fas fa-key"></i>
+                        <span>Permisos y Roles</span>
+                        <span class="badge admin">Admin</span>
+                    </a>
+                    <a href="#" class="nav-link" data-section="system-settings">
+                        <i class="fas fa-cogs"></i>
+                        <span>Configuración</span>
+                        <span class="badge admin">Admin</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h1 class="page-title" id="page-title">Dashboard Ejecutivo</h1>
+                    <p class="page-subtitle" id="page-subtitle">Vista general del sistema de ventas</p>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-info">
+                        <div class="user-avatar" id="user-avatar">A</div>
+                        <div class="user-details">
+                            <div class="user-name" id="user-name">Administrador</div>
+                            <div class="user-role">Sistema Paraguay</div>
+                        </div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="content-section">
+                    <!-- Metrics Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="background: var(--primary-gradient);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="total-customers-metric">-</div>
+                            <div class="metric-label">Clientes Totales</div>
+                            <div class="metric-change positive">+12% vs mes anterior</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="background: var(--secondary-gradient);">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="total-quotes-metric">-</div>
+                            <div class="metric-label">Cotizaciones</div>
+                            <div class="metric-change positive">+8% vs mes anterior</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="background: var(--success-gradient);">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="total-orders-metric">-</div>
+                            <div class="metric-label">Órdenes</div>
+                            <div class="metric-change positive">+15% vs mes anterior</div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="background: var(--warning-gradient);">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                            <div class="metric-value" id="total-revenue-metric">$0</div>
+                            <div class="metric-label">Ingresos Totales</div>
+                            <div class="metric-change positive">+24% vs mes anterior</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-history"></i>
+                                Actividad Reciente
+                            </h3>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-refresh"></i>
+                                Actualizar
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Descripción</th>
+                                        <th>Cliente</th>
+                                        <th>Monto</th>
+                                        <th>Estado</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activity">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                Cargando actividad...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers Section -->
+                <div id="customers-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-users"></i>
+                                Gestión de Clientes
+                            </h3>
+                            <button class="btn btn-primary" onclick="openAddCustomerModal()">
+                                <i class="fas fa-plus"></i>
+                                Nuevo Cliente
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Órdenes</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customers-table">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                Cargando clientes...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other sections will be similar with professional styling -->
+                <div id="quotes-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-file-alt"></i>
+                                Cotizaciones
+                            </h3>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Nueva Cotización
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quotes-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                Cargando cotizaciones...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More sections for orders, invoices, products, etc. -->
+                <div id="orders-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-shopping-cart"></i>
+                                Órdenes de Venta
+                            </h3>
+                        </div>
+                        <p class="text-center" style="padding: 2rem;">Contenido de órdenes aquí...</p>
+                    </div>
+                </div>
+
+                <div id="invoices-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                Facturas
+                            </h3>
+                        </div>
+                        <p class="text-center" style="padding: 2rem;">Contenido de facturas aquí...</p>
+                    </div>
+                </div>
+
+                <div id="products-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-box"></i>
+                                Productos
+                            </h3>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="openAddProductModal()">
+                                    <i class="fas fa-plus me-2"></i>Agregar Producto
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table-body">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                Cargando productos...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="customers-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-users"></i>
+                                Clientes
+                            </h3>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="openAddCustomerModal()">
+                                    <i class="fas fa-plus me-2"></i>Agregar Cliente
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="customers-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Empresa</th>
+                                        <th>Contacto</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Ciudad</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customers-table-body">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                Cargando clientes...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="quotes-section" class="content-section d-none">
+                    <div class="data-card">
+                        <div class="data-card-header">
+                            <h3 class="data-card-title">
+                                <i class="fas fa-file-alt"></i>
+                                Cotizaciones
+                            </h3>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="openAddQuoteModal()">
+                                    <i class="fas fa-plus me-2"></i>Nueva Cotización
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="quotes-table">
+                                <thead>
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quotes-table-body">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                Cargando cotizaciones...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ADD PRODUCT MODAL -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Producto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addProductForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productName" class="form-label">Nombre del Producto *</label>
+                                    <input type="text" class="form-control" id="productName" name="name" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productCategory" class="form-label">Categoría</label>
+                                    <select class="form-select" id="productCategory" name="category_id">
+                                        <option value="">Seleccionar categoría...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="productDescription" name="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productUnit" class="form-label">Unidad de Medida</label>
+                                    <select class="form-select" id="productUnit" name="unit_of_measure">
+                                        <option value="PZA">Pieza</option>
+                                        <option value="KG">Kilogramo</option>
+                                        <option value="LT">Litro</option>
+                                        <option value="MT">Metro</option>
+                                        <option value="CAJA">Caja</option>
+                                        <option value="PAQUETE">Paquete</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productCurrency" class="form-label">Moneda</label>
+                                    <select class="form-select" id="productCurrency" name="currency">
+                                        <option value="PYG" selected>Guaraníes (PYG)</option>
+                                        <option value="USD">Dólares (USD)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productCostPrice" class="form-label">Precio de Costo</label>
+                                    <input type="number" class="form-control" id="productCostPrice" name="cost_price" 
+                                           min="0" step="0.01" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productSellingPrice" class="form-label">Precio de Venta *</label>
+                                    <input type="number" class="form-control" id="productSellingPrice" name="selling_price" 
+                                           min="0" step="0.01" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="productMinStock" class="form-label">Stock Mínimo</label>
+                                    <input type="number" class="form-control" id="productMinStock" name="min_stock_level" 
+                                           min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="productMaxStock" class="form-label">Stock Máximo</label>
+                                    <input type="number" class="form-control" id="productMaxStock" name="max_stock_level" 
+                                           min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="productWeight" class="form-label">Peso (kg)</label>
+                                    <input type="number" class="form-control" id="productWeight" name="weight" 
+                                           min="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productBarcode" class="form-label">Código de Barras</label>
+                                    <input type="text" class="form-control" id="productBarcode" name="barcode">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productExpiryDate" class="form-label">Fecha de Vencimiento</label>
+                                    <input type="date" class="form-control" id="productExpiryDate" name="expiry_date">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productImageUrl" class="form-label">URL de Imagen</label>
+                            <input type="url" class="form-control" id="productImageUrl" name="image_url">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="productIsActive" name="is_active" checked>
+                                    <label class="form-check-label" for="productIsActive">
+                                        Producto activo
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="productIsTrackable" name="is_trackable" checked>
+                                    <label class="form-check-label" for="productIsTrackable">
+                                        Manejar inventario
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Guardar Producto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT PRODUCT MODAL -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">
+                        <i class="fas fa-edit me-2"></i>Editar Producto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId" name="product_id">
+                    <div class="modal-body">
+                        <!-- Same fields as add product modal with edit prefix -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductName" class="form-label">Nombre del Producto *</label>
+                                    <input type="text" class="form-control" id="editProductName" name="name" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductCategory" class="form-label">Categoría</label>
+                                    <select class="form-select" id="editProductCategory" name="category_id">
+                                        <option value="">Seleccionar categoría...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editProductDescription" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="editProductDescription" name="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductUnit" class="form-label">Unidad de Medida</label>
+                                    <select class="form-select" id="editProductUnit" name="unit_of_measure">
+                                        <option value="PZA">Pieza</option>
+                                        <option value="KG">Kilogramo</option>
+                                        <option value="LT">Litro</option>
+                                        <option value="MT">Metro</option>
+                                        <option value="CAJA">Caja</option>
+                                        <option value="PAQUETE">Paquete</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductCurrency" class="form-label">Moneda</label>
+                                    <select class="form-select" id="editProductCurrency" name="currency">
+                                        <option value="PYG">Guaraníes (PYG)</option>
+                                        <option value="USD">Dólares (USD)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductCostPrice" class="form-label">Precio de Costo</label>
+                                    <input type="number" class="form-control" id="editProductCostPrice" name="cost_price" 
+                                           min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductSellingPrice" class="form-label">Precio de Venta *</label>
+                                    <input type="number" class="form-control" id="editProductSellingPrice" name="selling_price" 
+                                           min="0" step="0.01" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="editProductMinStock" class="form-label">Stock Mínimo</label>
+                                    <input type="number" class="form-control" id="editProductMinStock" name="min_stock_level" 
+                                           min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="editProductMaxStock" class="form-label">Stock Máximo</label>
+                                    <input type="number" class="form-control" id="editProductMaxStock" name="max_stock_level" 
+                                           min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="editProductWeight" class="form-label">Peso (kg)</label>
+                                    <input type="number" class="form-control" id="editProductWeight" name="weight" 
+                                           min="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductBarcode" class="form-label">Código de Barras</label>
+                                    <input type="text" class="form-control" id="editProductBarcode" name="barcode">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductExpiryDate" class="form-label">Fecha de Vencimiento</label>
+                                    <input type="date" class="form-control" id="editProductExpiryDate" name="expiry_date">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="editProductImageUrl" class="form-label">URL de Imagen</label>
+                            <input type="url" class="form-control" id="editProductImageUrl" name="image_url">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="editProductIsActive" name="is_active">
+                                    <label class="form-check-label" for="editProductIsActive">
+                                        Producto activo
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="editProductIsTrackable" name="is_trackable">
+                                    <label class="form-check-label" for="editProductIsTrackable">
+                                        Manejar inventario
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Actualizar Producto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD CUSTOMER MODAL -->
+    <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCustomerModalLabel">
+                        <i class="fas fa-user-plus me-2"></i>Agregar Nuevo Cliente
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addCustomerForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="customerCompanyName" class="form-label">Nombre de la Empresa *</label>
+                                    <input type="text" class="form-control" id="customerCompanyName" name="company_name" required>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="customerCountry" class="form-label">País</label>
+                                    <select class="form-select" id="customerCountry" name="country">
+                                        <option value="Paraguay" selected>Paraguay</option>
+                                        <option value="Argentina">Argentina</option>
+                                        <option value="Brasil">Brasil</option>
+                                        <option value="Uruguay">Uruguay</option>
+                                        <option value="Bolivia">Bolivia</option>
+                                        <option value="Chile">Chile</option>
+                                        <option value="México">México</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerContactName" class="form-label">Nombre del Contacto</label>
+                                    <input type="text" class="form-control" id="customerContactName" name="contact_name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerTaxId" class="form-label">RUC / Cédula</label>
+                                    <input type="text" class="form-control" id="customerTaxId" name="tax_id">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="customerEmail" name="email">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerPhone" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="customerPhone" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="customerAddress" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="customerAddress" name="address">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerCity" class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" id="customerCity" name="city">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="customerState" class="form-label">Departamento</label>
+                                    <input type="text" class="form-control" id="customerState" name="state">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="customerPostalCode" class="form-label">Código Postal</label>
+                                    <input type="text" class="form-control" id="customerPostalCode" name="postal_code">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerCreditLimit" class="form-label">Límite de Crédito (PYG)</label>
+                                    <input type="number" class="form-control" id="customerCreditLimit" name="credit_limit" 
+                                           min="0" step="1000" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customerPaymentTerms" class="form-label">Plazo de Pago (días)</label>
+                                    <input type="number" class="form-control" id="customerPaymentTerms" name="payment_terms" 
+                                           min="0" value="30">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="customerNotes" class="form-label">Notas</label>
+                            <textarea class="form-control" id="customerNotes" name="notes" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="customerIsActive" name="is_active" checked>
+                            <label class="form-check-label" for="customerIsActive">
+                                Cliente activo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Guardar Cliente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD QUOTE MODAL -->
+    <div class="modal fade" id="addQuoteModal" tabindex="-1" aria-labelledby="addQuoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addQuoteModalLabel">
+                        <i class="fas fa-file-alt me-2"></i>Nueva Cotización
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addQuoteForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="quoteCustomer" class="form-label">Cliente *</label>
+                                    <select class="form-select" id="quoteCustomer" name="customer_id" required>
+                                        <option value="">Seleccionar cliente...</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="quoteCurrency" class="form-label">Moneda</label>
+                                    <select class="form-select" id="quoteCurrency" name="currency">
+                                        <option value="PYG" selected>Guaraníes (PYG)</option>
+                                        <option value="USD">Dólares (USD)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="quoteValidUntil" class="form-label">Válida hasta</label>
+                                    <input type="date" class="form-control" id="quoteValidUntil" name="valid_until" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="quoteNotes" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="quoteNotes" name="notes" rows="3"></textarea>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6>Productos de la Cotización</h6>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="addQuoteItem">
+                                <i class="fas fa-plus me-1"></i>Agregar Producto
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-sm" id="quoteItemsTable">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">Producto</th>
+                                        <th width="15%">Cantidad</th>
+                                        <th width="15%">Precio Unit.</th>
+                                        <th width="15%">Descuento %</th>
+                                        <th width="15%">Total</th>
+                                        <th width="5%">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quoteItemsBody">
+                                    <!-- Items will be added dynamically -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" class="text-end">Subtotal:</th>
+                                        <th id="quoteSubtotal">0</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="4" class="text-end">IVA (10%):</th>
+                                        <th id="quoteTax">0</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="4" class="text-end">Total:</th>
+                                        <th id="quoteTotal">0</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Crear Cotización
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Users Management Section -->
+    <div id="users-section" class="content-section d-none">
+        <div class="data-card">
+            <div class="data-card-header">
+                <h2 class="data-card-title">
+                    <i class="fas fa-user-cog"></i>
+                    Gestión de Usuarios
+                </h2>
+                <button class="btn-primary" onclick="showCreateUserModal()">
+                    <i class="fas fa-plus"></i>
+                    Crear Usuario
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Departamento</th>
+                            <th>Estado</th>
+                            <th>Limitaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                <div class="loading-spinner"></div>
+                                Cargando usuarios...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- User Statistics Cards -->
+        <div class="metrics-grid" style="margin-top: 2rem;">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-icon" style="background: var(--primary-gradient);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="metric-value" id="total-users-metric">-</div>
+                <div class="metric-label">Total Usuarios</div>
+                <div class="metric-change positive">Sistema Paraguay</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-icon" style="background: var(--secondary-gradient);">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+                <div class="metric-value" id="active-users-metric">-</div>
+                <div class="metric-label">Usuarios Activos</div>
+                <div class="metric-change positive">En línea</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-icon" style="background: var(--success-gradient);">
+                        <i class="fas fa-user-tag"></i>
+                    </div>
+                </div>
+                <div class="metric-value" id="roles-count-metric">5</div>
+                <div class="metric-label">Roles Disponibles</div>
+                <div class="metric-change positive">Admin, Manager, Seller, Viewer, Accountant</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div id="create-user-modal" class="modal d-none">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Crear Nuevo Usuario</h3>
+                <button class="modal-close" onclick="hideCreateUserModal()">&times;</button>
+            </div>
+            <form id="create-user-form">
+                <div class="modal-body">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label>Nombre de Usuario *</label>
+                            <input type="text" name="username" required class="form-control">
+                        </div>
+                        <div>
+                            <label>Nombre Completo *</label>
+                            <input type="text" name="full_name" required class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label>Email *</label>
+                            <input type="email" name="email" required class="form-control">
+                        </div>
+                        <div>
+                            <label>Contraseña *</label>
+                            <input type="password" name="password" required class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label>Rol del Usuario *</label>
+                            <select name="role" required class="form-control" onchange="updateUserLimitations()">
+                                <option value="">Seleccionar rol...</option>
+                                <option value="seller">Vendedor (Limitaciones estándar)</option>
+                                <option value="manager">Gerente (Acceso amplio)</option>
+                                <option value="accountant">Contador (Acceso financiero)</option>
+                                <option value="viewer">Visualizador (Solo lectura)</option>
+                                <option value="admin">Administrador (Sin limitaciones)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Departamento/Sucursal</label>
+                            <input type="text" name="department" class="form-control" placeholder="Ej: Asunción Central">
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: var(--text-primary); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">
+                        <i class="fas fa-sliders-h"></i> Limitaciones de Uso
+                    </h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label>Máx. Clientes</label>
+                            <input type="number" name="max_customers" value="10" min="0" max="1000" class="form-control">
+                        </div>
+                        <div>
+                            <label>Máx. Cotizaciones/mes</label>
+                            <input type="number" name="max_quotes" value="20" min="0" max="1000" class="form-control">
+                        </div>
+                        <div>
+                            <label>Máx. Órdenes/mes</label>
+                            <input type="number" name="max_orders" value="15" min="0" max="1000" class="form-control">
+                        </div>
+                        <div>
+                            <label>Máx. Facturas/mes</label>
+                            <input type="number" name="max_invoices" value="10" min="0" max="1000" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: var(--text-primary); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">
+                        <i class="fas fa-key"></i> Permisos del Sistema
+                    </h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="can_manage_inventory"> Gestionar Inventario
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="can_view_reports" checked> Ver Reportes
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="can_manage_tourism_regime"> Gestionar Régimen Turismo
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="can_manage_deposits"> Gestionar Depósitos
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="can_export_data"> Exportar Datos
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <label>Notas del Administrador</label>
+                        <textarea name="notes" class="form-control" rows="3" placeholder="Notas adicionales sobre este usuario..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="hideCreateUserModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Crear Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
