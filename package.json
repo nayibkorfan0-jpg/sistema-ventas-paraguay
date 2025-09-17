@@ -1,0 +1,13 @@
+{
+  "name": "github-upload-script",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Script to upload project to GitHub using Replit integration",
+  "main": "upload_to_github.js",
+  "scripts": {
+    "upload": "node upload_to_github.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.0"
+  }
+}
