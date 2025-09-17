@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: sales_management
+      POSTGRES_USER: sales_user
+      POSTGRES_PASSWORD: sales_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sales_user -d sales_management"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # API Backend (FastAPI)
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://sales_user:sales_password@postgres:5432/sales_management
+      SECRET_KEY: development-secret-key-change-in-production
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Frontend (React)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: http://localhost:5000
+    depends_on:
+      - api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
